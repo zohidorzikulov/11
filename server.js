@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const sessions = new Map();
 function makeDb() {
   const db = newDb({ autoCreateForeignKeyIndices: true });
-  db.public.none(\`
+  db.public.none(`
     CREATE TABLE departments (id SERIAL PRIMARY KEY, name VARCHAR(80) NOT NULL, location VARCHAR(80));
     CREATE TABLE employees (id SERIAL PRIMARY KEY, full_name VARCHAR(100) NOT NULL, role VARCHAR(80), salary NUMERIC(12,2), department_id INTEGER REFERENCES departments(id), hired_at DATE);
     CREATE TABLE projects (id SERIAL PRIMARY KEY, title VARCHAR(120), budget NUMERIC(14,2), status VARCHAR(30), lead_id INTEGER REFERENCES employees(id));
@@ -25,7 +25,7 @@ function makeDb() {
     INSERT INTO projects(title,budget,status,lead_id) VALUES
     ('Core Banking API',850000000,'active',1),('Brand refresh',120000000,'active',4),
     ('Analytics platform',430000000,'planning',3),('Mobile app v2',560000000,'active',6);
-  \`);
+  `);
   return db;
 }
 function getDb(id) {
