@@ -1,18 +1,5 @@
 const $=s=>document.querySelector(s), editor=$("#sqlEditor"), session="ql-"+Math.random().toString(36).slice(2)+Date.now();
-const lessons=[
-["01","SQL bilan tanishuv","Ma’lumotlar bazasi, jadval va SQL buyruqlarining asoslari.","SELECT * FROM employees;"],
-["02","SELECT va ustunlar","Jadvaldan kerakli ustunlarni tanlash, alias ishlatish.","SELECT full_name AS name, role FROM employees;"],
-["03","WHERE — filtrlash","Shartlar, taqqoslash operatorlari va mantiqiy ifodalar.","SELECT * FROM employees WHERE salary > 16000000;"],
-["04","ORDER BY va LIMIT","Natijalarni tartiblash va qatorlar sonini cheklash.","SELECT * FROM employees ORDER BY salary DESC LIMIT 5;"],
-["05","Agregat funksiyalar","COUNT, SUM, AVG, MIN va MAX bilan hisoblash.","SELECT AVG(salary) FROM employees;"],
-["06","GROUP BY","Ma’lumotlarni guruhlash va guruhlar bo‘yicha hisoblash.","SELECT department_id, COUNT(*) FROM employees GROUP BY department_id;"],
-["07","HAVING","Guruhlangan natijalarni filtrlash.","SELECT department_id, COUNT(*) FROM employees GROUP BY department_id HAVING COUNT(*) > 1;"],
-["08","INNER JOIN","Ikki yoki undan ortiq jadvalni bog‘lash.","SELECT e.full_name, d.name FROM employees e JOIN departments d ON e.department_id=d.id;"],
-["09","LEFT JOIN","Chap jadvaldagi barcha yozuvlarni saqlab bog‘lash.","SELECT d.name, e.full_name FROM departments d LEFT JOIN employees e ON e.department_id=d.id;"],
-["10","INSERT va UPDATE","Yangi yozuv qo‘shish va mavjud yozuvni yangilash.","INSERT INTO departments(name,location) VALUES ('Support','Navoiy');"],
-["11","DELETE va tranzaksiya","Yozuvlarni o‘chirish va tranzaksiyalar mantig‘i.","DELETE FROM projects WHERE status='cancelled';"],
-["12","Subquery va CTE","Ichki so‘rovlar va WITH orqali murakkab so‘rovlarni soddalashtirish.","WITH avg_pay AS (SELECT AVG(salary) AS a FROM employees) SELECT * FROM employees, avg_pay WHERE salary > a;"]
-];
+const lessons=window.LESSON_CONTENT||[];
 const challenges=[
 ["01","Yuqori maoshli xodimlar","Maoshi 16 milliondan yuqori bo‘lgan xodimlarni toping.","SELECT * FROM employees WHERE salary > 16000000;"],
 ["02","Bo‘limlar kesimida xodimlar","Har bir bo‘limdagi xodimlar sonini hisoblang.","SELECT d.name, COUNT(e.id) FROM departments d LEFT JOIN employees e ON e.department_id=d.id GROUP BY d.name;"],
@@ -33,8 +20,33 @@ $("#formatBtn").addEventListener("click",()=>{editor.value=editor.value.replace(
 $("#resetBtn").addEventListener("click",async()=>{if(!confirm("Sandbox bazasini boshlang‘ich holatga qaytarasizmi?"))return;await fetch("/api/reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session})});setSql("SELECT * FROM employees LIMIT 5;");toast("Sandbox qayta tiklandi");});
 function showView(view){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$("#"+view+"View").classList.remove("hidden");document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.view===view));$("#crumbTitle").textContent=({lab:"SQL laboratoriya",lessons:"Darslar",schema:"Ma’lumotlar sxemasi",challenges:"Amaliy topshiriqlar",guide:"SQL qo‘llanma"})[view];}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
-$("#lessonGrid").innerHTML=lessons.map(l=>'<article class="lesson-card"><span class="lesson-num">LESSON / '+l[0]+'</span><h3>'+l[1]+'</h3><p>'+l[2]+'</p><button data-code="'+encodeURIComponent(l[3])+'">Darsni boshlash →</button></article>').join("");
-$("#lessonGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-code]");if(b)setSql(decodeURIComponent(b.dataset.code));});
+$("#lessonGrid").innerHTML=lessons.map(l=>'<article class="lesson-card"><span class="lesson-num">LESSON / '+esc(l.id)+' · '+esc(l.level)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.summary)+'</p><div class="lesson-card-meta">'+esc(l.time)+' · Video + amaliyot + xatolar</div><button data-lesson="'+esc(l.id)+'">Darsni boshlash →</button></article>').join("");
+$("#lessonGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-lesson]");if(b)openLesson(b.dataset.lesson);});
+function openLesson(id){
+ const l=lessons.find(x=>x.id===id); if(!l)return;
+ const detail=$("#lessonDetail");
+ const videoUrl="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(l.video)+"?start="+Number(l.start||0);
+ const watchUrl="https://www.youtube.com/watch?v="+encodeURIComponent(l.video)+"&t="+Number(l.start||0)+"s";
+ detail.innerHTML='<div class="lesson-detail-head"><button class="text-btn" id="backLessons">← Barcha darslar</button><span class="lesson-num">LESSON / '+esc(l.id)+' · '+esc(l.level)+' · '+esc(l.time)+'</span><h2>'+esc(l.title)+'</h2><p>'+esc(l.summary)+'</p></div>'+
+ '<div class="lesson-content-grid"><div class="lesson-main-column">'+
+ '<section class="learning-panel"><div class="panel-kicker">1 · VIDEO QO‘LLANMA</div><h3>'+esc(l.videoTitle)+'</h3><div class="video-frame"><iframe src="'+videoUrl+'" title="'+esc(l.videoTitle)+'" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><p class="video-caption">Videoni ko‘ring, so‘ng shu sahifadagi misolni laboratoriyada bajaring. Video tashqi YouTube manbasidan olinadi.</p><a class="video-link" href="'+watchUrl+'" target="_blank" rel="noopener noreferrer">YouTube’da ochish ↗</a></section>'+
+ '<section class="learning-panel"><div class="panel-kicker">2 · MAVZU TUSHUNTIRISH</div><h3>Nimani o‘rganasiz?</h3><p>'+esc(l.goal)+'</p><ol class="lesson-steps">'+l.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol></section>'+
+ '<section class="learning-panel"><div class="panel-kicker">3 · ISHLAYDIGAN AMALIY MISOL</div><h3>To‘g‘ri SQL</h3><p>Quyidagi kodni muharrirga yuboring va natijani kuzating.</p><pre class="lesson-code"><code>'+esc(l.good)+'</code></pre><button class="lesson-action primary" data-inject="good">▶ Misolni laboratoriyada bajarish</button></section>'+
+ '<section class="learning-panel error-learning"><div class="panel-kicker">4 · XATONI ANIQLASH VA TUZATISH</div><h3>Noto‘g‘ri kod nima uchun ishlamaydi?</h3><pre class="lesson-code bad-code"><code>'+esc(l.bad)+'</code></pre><p><b>Sababi:</b> '+esc(l.why)+'</p><h4>To‘g‘rilangan ko‘rinishi</h4><pre class="lesson-code"><code>'+esc(l.fix)+'</code></pre><button class="lesson-action" data-inject="fix">Tuzatilgan kodni laboratoriyaga yuborish</button></section>'+
+ '<section class="learning-panel"><div class="panel-kicker">5 · MUSTAQIL MASHQ</div><h3>Endi o‘zingiz bajaring</h3><p>'+esc(l.task)+'</p><button class="lesson-action primary" data-inject="task">Mashq uchun muharrirni ochish</button><details class="answer-details"><summary>Javobni ko‘rish va solishtirish</summary><pre class="lesson-code"><code>'+esc(l.solution)+'</code></pre><button class="lesson-action" data-inject="solution">Javobni muharrirga yuborish</button></details></section>'+
+ '<section class="learning-panel"><div class="panel-kicker">6 · QO‘SHIMCHA SHUG‘ULLANISH</div><h3>Bilimni mustahkamlang</h3><p>'+esc(l.extra)+'</p><div class="expected-result"><b>Kutiladigan natija</b><p>'+esc(l.expected)+'</p></div><h4>Eslab qoling</h4><ul class="lesson-tips">'+l.tips.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
+ '</div><aside class="lesson-side-column"><div class="lesson-side-card"><span class="side-card-label">DARS TARTIBI</span><ol><li>Videoni ko‘rish</li><li>Mavzuni o‘qish</li><li>Misolni bajarish</li><li>Xatoni tuzatish</li><li>Mashqni mustaqil ishlash</li></ol></div><div class="lesson-side-card"><span class="side-card-label">SQL LABORATORIYA</span><p>Natijani ko‘rish uchun kodni muharrirga yuboring. So‘rovni bajarish tugmasi orqali tekshiring.</p><button class="lesson-action primary" data-inject="good">Misolni ochish ↗</button></div><div class="lesson-side-card"><span class="side-card-label">MUHIM ESLATMA</span><p>Bu kurs muhiti pg-mem asosidagi o‘quv simulyatori. Ayrim ilg‘or PostgreSQL imkoniyatlari haqiqiy serverdagidan farq qilishi mumkin.</p></div></aside></div>';
+ detail.classList.remove("hidden");
+ $("#lessonGrid").classList.add("hidden");
+ detail.scrollIntoView({behavior:"smooth",block:"start"});
+ detail.onclick=e=>{
+  if(e.target.closest("#backLessons")){detail.classList.add("hidden");$("#lessonGrid").classList.remove("hidden");$("#lessonGrid").scrollIntoView({behavior:"smooth",block:"start"});return;}
+  const action=e.target.closest("[data-inject]");if(!action)return;
+  const key=action.dataset.inject;
+  const code=key==="good"?l.good:key==="fix"?l.fix:key==="task"?l.task:key==="solution"?l.solution:"";
+  if(code)setSql(code);
+ };
+}
 const schemas=[["departments","id · SERIAL · PK","name · VARCHAR(80)","location · VARCHAR(80)"],["employees","id · SERIAL · PK","full_name · VARCHAR(100)","role · VARCHAR(80)","salary · NUMERIC(12,2)","department_id · INTEGER · FK → departments.id","hired_at · DATE"],["projects","id · SERIAL · PK","title · VARCHAR(120)","budget · NUMERIC(14,2)","status · VARCHAR(30)","lead_id · INTEGER · FK → employees.id"]];
 $("#schemaGrid").innerHTML=schemas.map(s=>'<article class="schema-card"><h3>▤ '+s[0]+'</h3><ul>'+s.slice(1).map(x=>"<li>"+x+"</li>").join("")+'</ul></article>').join("")+'<article class="schema-card"><h3>⌁ BOG‘LANISHLAR</h3><p>employees.department_id → departments.id</p><p>projects.lead_id → employees.id</p><p class="muted">Foreign key munosabatlari</p></article>';
 $("#challengeList").innerHTML=challenges.map(c=>'<article class="challenge-item"><span class="challenge-n">'+c[0]+'</span><div><h3>'+c[1]+'</h3><p>'+c[2]+'</p></div><button data-challenge="'+encodeURIComponent(c[3])+'">Mashqni ochish →</button></article>').join("");
