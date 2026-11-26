@@ -35,7 +35,7 @@ window.ANALYTICS_WEEKS = [
     "title": "Excel formulalari, Pivot Table va dashboard",
     "track": "EXCEL · ANALYSIS",
     "hours": "8–10 soat",
-    "video": 17092,
+    "video": 17175,
     "videoLabel": "Excel formulas, XLOOKUP, Pivot Tables & charts",
     "goal": "Hisoblangan ustunlar, shartli formulalar, Pivot Table va sodda boshqaruv dashboardini qurish.",
     "theory": [
@@ -95,7 +95,7 @@ window.ANALYTICS_WEEKS = [
     "title": "SQL agregatsiya, JOIN va biznes KPI",
     "track": "SQL · ANALYTICS",
     "hours": "8–10 soat",
-    "video": 2814,
+    "video": 2823,
     "videoLabel": "SQL JOIN, GROUP BY, HAVING, CTE",
     "goal": "Bir nechta jadvalni birlashtirish, guruhlash va biznes ko‘rsatkichlarini SQL orqali hisoblash.",
     "theory": [
@@ -245,7 +245,7 @@ window.ANALYTICS_WEEKS = [
     "title": "Power BI dashboard va data storytelling",
     "track": "POWER BI · REPORTING",
     "hours": "8–10 soat",
-    "video": 33200,
+    "video": 37374,
     "videoLabel": "Power BI visualizations & guided project",
     "goal": "KPI, vaqt dinamikasi, hudud va mahsulot kesimida interaktiv dashboard qurish va natijani tushuntirish.",
     "theory": [
