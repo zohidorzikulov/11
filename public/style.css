@@ -41,3 +41,13 @@
 .lesson-side-card p{margin-bottom:10px}
 @media(max-width:900px){.lesson-content-grid{grid-template-columns:1fr}.lesson-side-column{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-side-card:last-child{grid-column:1/-1}}
 @media(max-width:520px){.lesson-detail-head{padding:18px}.lesson-detail-head h2{font-size:21px}.learning-panel{padding:15px}.lesson-side-column{grid-template-columns:1fr}.lesson-side-card:last-child{grid-column:auto}.lesson-code{font-size:9px;padding:10px}}
+
+
+.error-reference{border-color:#51466f}
+.error-reference .panel-kicker{color:#b7a5ff}
+.error-reference-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.error-reference-list>div{background:#0c1422;border:1px solid #29364c;border-radius:7px;padding:10px;min-width:0}
+.error-reference-list code{font:9px var(--mono);color:#f0b1c3;overflow-wrap:anywhere}
+.error-reference-list p{margin:6px 0 0;font-size:9px;line-height:1.7}
+@media(max-width:520px){.error-reference-list{grid-template-columns:1fr}}
+.progress-track i{width:0%}
