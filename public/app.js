@@ -18,7 +18,7 @@ $("#runBtn").addEventListener("click",runQuery);editor.addEventListener("keydown
 document.querySelectorAll(".snippet").forEach(b=>b.addEventListener("click",()=>setSql(b.dataset.sql)));
 $("#formatBtn").addEventListener("click",()=>{editor.value=editor.value.replace(/\s+(FROM|WHERE|LEFT JOIN|INNER JOIN|JOIN|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET)\s+/gi,"\n$1 ").replace(/,\s*/g,",\n    ").trim();updateLines();toast("So‘rov formatlandi");});
 $("#resetBtn").addEventListener("click",async()=>{if(!confirm("Sandbox bazasini boshlang‘ich holatga qaytarasizmi?"))return;await fetch("/api/reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({session})});setSql("SELECT * FROM employees LIMIT 5;");toast("Sandbox qayta tiklandi");});
-function showView(view){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$("#"+view+"View").classList.remove("hidden");document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.view===view));$("#crumbTitle").textContent=({lab:"SQL laboratoriya",lessons:"Darslar",schema:"Ma’lumotlar sxemasi",challenges:"Amaliy topshiriqlar",guide:"SQL qo‘llanma"})[view];}
+function showView(view){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$("#"+view+"View").classList.remove("hidden");document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.view===view));$("#crumbTitle").textContent=({lab:"SQL laboratoriya",lessons:"Darslar",schema:"Ma’lumotlar sxemasi",challenges:"Amaliy topshiriqlar",guide:"SQL qo‘llanma",analytics:"Data Analytics kursi"})[view];}
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
 $("#lessonGrid").innerHTML=lessons.map(l=>'<article class="lesson-card"><span class="lesson-num">LESSON / '+esc(l.id)+' · '+esc(l.level)+'</span><h3>'+esc(l.title)+'</h3><p>'+esc(l.summary)+'</p><div class="lesson-card-meta">'+esc(l.time)+' · Video + amaliyot + xatolar</div><button data-lesson="'+esc(l.id)+'">Darsni boshlash →</button></article>').join("");
 $("#lessonGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-lesson]");if(b)openLesson(b.dataset.lesson);});
@@ -63,3 +63,39 @@ const guides=[["SELECT","SELECT column FROM table;","Jadvaldan ustunlarni tanlas
 $("#guideGrid").innerHTML=guides.map(g=>'<article class="guide-card"><h3>'+g[0]+'</h3><code>'+g[1]+'</code><p>'+g[2]+'</p><button class="text-btn" data-guide="'+encodeURIComponent(g[1])+'">Muharrirga joylash →</button></article>').join("");
 $("#guideGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-guide]");if(b)setSql(decodeURIComponent(b.dataset.guide));});
 updateLines();
+
+/* Data Analytics learning path */
+const analyticsWeeks=window.ANALYTICS_WEEKS||[];
+const analyticsDoneKey="querylab-data-analytics-done-v1";
+function readAnalyticsDone(){try{return JSON.parse(localStorage.getItem(analyticsDoneKey)||"[]")}catch{return []}}
+function writeAnalyticsDone(items){try{localStorage.setItem(analyticsDoneKey,JSON.stringify(items))}catch{}}
+function renderAnalytics(){
+ const done=readAnalyticsDone();
+ const pct=Math.round(done.length/12*100);
+ $("#analyticsOverview").innerHTML='<div class="analytics-stat"><b>12</b><span>haftalik reja</span></div><div class="analytics-stat"><b>96–120</b><span>soat amaliy o‘qish</span></div><div class="analytics-stat"><b>4</b><span>asosiy vosita: Excel, SQL, Python, AI</span></div><div class="analytics-progress"><div><b>'+done.length+'/12 hafta</b><span>'+pct+'% yakunlandi</span></div><div class="analytics-progress-track"><i style="width:'+pct+'%"></i></div></div>';
+ $("#analyticsWeeks").innerHTML=analyticsWeeks.map(w=>'<article class="analytics-week '+(done.includes(w.n)?'completed':'')+'"><div class="week-number">W'+String(w.n).padStart(2,"0")+'</div><div class="week-info"><span>'+esc(w.track)+'</span><h3>'+esc(w.title)+'</h3><small>'+esc(w.hours)+' · Video + nazariya + amaliyot</small></div><label class="week-check"><input type="checkbox" data-weekdone="'+w.n+'" '+(done.includes(w.n)?'checked':'')+'><span>'+ (done.includes(w.n)?"Bajarildi":"Belgilash")+'</span></label><button class="week-open" data-openweek="'+w.n+'">Darsni ochish →</button></article>').join("");
+}
+function openAnalyticsWeek(n){
+ const w=analyticsWeeks.find(x=>x.n===n);if(!w)return;
+ const detail=$("#analyticsDetail");
+ const video=w.video?'<div class="analytics-video"><iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(w.n===10?"ZF2G5h1TIMs":"PSNXoAs2FtQ")+'?start='+Number(w.video)+'" title="'+esc(w.videoLabel)+'" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="analytics-muted">'+esc(w.videoLabel)+' · Video uzun bootcamp ichidan tegishli bo‘limdan boshlanadi. Agar embed ishlamasa, YouTube’da oching.</p><a class="analytics-resource" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v='+(w.n===10?"ZF2G5h1TIMs":"PSNXoAs2FtQ")+(w.video?"&t="+Number(w.video)+"s":"")+'">Videoni YouTube’da ochish ↗</a>':'<div class="analytics-resource-panel"><b>Video o‘rniga rasmiy o‘quv materiali</b><p>Statistika asoslarini o‘rganing, so‘ng quyidagi amaliy mashqni bajaring.</p><a class="analytics-resource" target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/training/modules/get-started-data-analytics/">Microsoft Learn — Data Analytics asoslari ↗</a></div>';
+ detail.innerHTML='<div class="analytics-detail-head"><button class="text-btn" id="backAnalytics">← 12 haftalik reja</button><span>'+esc(w.track)+' · '+esc(w.hours)+'</span><h2>Hafta '+w.n+': '+esc(w.title)+'</h2><p>'+esc(w.goal)+'</p></div><div class="analytics-detail-grid"><div class="analytics-main">'+
+ '<section class="analytics-panel"><div class="analytics-kicker">01 · VIDEO QO‘LLANMA</div><h3>'+esc(w.videoLabel)+'</h3>'+video+'</section>'+
+ '<section class="analytics-panel"><div class="analytics-kicker">02 · NAZARIY BILIM</div><h3>Asosiy tushunchalar</h3><ul>'+w.theory.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></section>'+
+ '<section class="analytics-panel"><div class="analytics-kicker">03 · BOSQICHMA-BOSQICH AMALIYOT</div><h3>Bugungi laboratoriya</h3><ol>'+w.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><div class="analytics-code-head"><b>Namuna / shablon</b><button data-copycode> Nusxa olish</button></div><pre class="analytics-code" id="weekCode">'+esc(w.code)+'</pre></section>'+
+ '<section class="analytics-panel"><div class="analytics-kicker">04 · MUSTAQIL TOPSHIRIQ</div><h3>O‘zingiz bajaring</h3><p>'+esc(w.task)+'</p><div class="analytics-deliverable"><b>Hafta yakuni natijasi</b><p>'+esc(w.deliverable)+'</p></div></section>'+
+ '<section class="analytics-panel analytics-error"><div class="analytics-kicker">05 · XATOLAR VA YECHIM</div><h3>Tekshirish ro‘yxati</h3><ul>'+w.pitfalls.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul><p class="analytics-check"><b>O‘z-o‘zingizni tekshiring:</b> '+esc(w.check)+'</p></section>'+
+ '<section class="analytics-panel"><div class="analytics-kicker">06 · AI BILAN ISHLASH</div><h3>Prompt namunasi</h3><p>Promptni AI yordamchisiga yuboring, lekin kod va xulosani mustaqil tekshiring.</p><pre class="analytics-code" id="weekPrompt">'+esc(w.ai)+'</pre><button class="analytics-copy" data-copyprompt>Promptni nusxalash</button></section>'+
+ '</div><aside class="analytics-side"><div class="analytics-side-card"><b>HAFTALIK STUDY ROUTINE</b><ol><li>1-kun: video + konspekt (1.5 soat)</li><li>2-kun: nazariya va namuna (1.5 soat)</li><li>3-kun: yo‘riqnoma bilan amaliyot (2 soat)</li><li>4-kun: mustaqil mashq (2 soat)</li><li>5-kun: tekshiruv va mini-hisobot (1–3 soat)</li></ol></div><div class="analytics-side-card"><b>HAFTA NATIJASI</b><p>'+esc(w.deliverable)+'</p><label class="analytics-complete"><input type="checkbox" data-detaildone="'+w.n+'" '+(readAnalyticsDone().includes(w.n)?"checked":"")+'> Bu haftani yakunladim</label></div><div class="analytics-side-card"><b>KEYINGI BOSQICH</b><p>Keyingi haftaga o‘tishdan oldin yuqoridagi natijani saqlang va o‘z-o‘zingizni tekshirish savollariga javob bering.</p></div></aside></div>';
+ $("#analyticsWeeks").classList.add("hidden");detail.classList.remove("hidden");detail.scrollIntoView({behavior:"smooth",block:"start"});
+ detail.onclick=async e=>{
+  if(e.target.closest("#backAnalytics")){detail.classList.add("hidden");$("#analyticsWeeks").classList.remove("hidden");$("#analyticsWeeks").scrollIntoView({behavior:"smooth",block:"start"});return;}
+  if(e.target.closest("[data-copycode]")){try{await navigator.clipboard.writeText(w.code);toast("Namuna kod nusxalandi")}catch{toast("Nusxa olish uchun kodni belgilang")}}
+  if(e.target.closest("[data-copyprompt]")){try{await navigator.clipboard.writeText(w.ai);toast("AI prompt nusxalandi")}catch{toast("Promptni qo‘lda belgilang")}}
+  const check=e.target.closest("[data-detaildone]");if(check){let items=readAnalyticsDone();items=check.checked?[...new Set([...items,w.n])]:items.filter(x=>x!==w.n);writeAnalyticsDone(items);renderAnalytics();toast(check.checked?"Hafta yakunlandi":"Belgi olib tashlandi");}
+ };
+}
+renderAnalytics();
+$("#analyticsWeeks").addEventListener("click",e=>{const b=e.target.closest("[data-openweek]");if(b)openAnalyticsWeek(Number(b.dataset.openweek));});
+$("#analyticsWeeks").addEventListener("change",e=>{const c=e.target.closest("[data-weekdone]");if(!c)return;let items=readAnalyticsDone();items=c.checked?[...new Set([...items,Number(c.dataset.weekdone)])]:items.filter(x=>x!==Number(c.dataset.weekdone));writeAnalyticsDone(items);renderAnalytics();});
+
