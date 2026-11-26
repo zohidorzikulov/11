@@ -1,4 +1,4 @@
-/* QueryLab dars materiallari. YouTube videolar tashqi manba; til va davomiylik videoning o‘ziga bog‘liq. */
+/* Curated topic-specific YouTube lessons. */
 window.LESSON_CONTENT = [
   {
     "id": "01",
@@ -123,9 +123,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "9 daqiqa",
     "summary": "COUNT, SUM, AVG, MIN va MAX yordamida ma’lumotlardan statistik ko‘rsatkich olish.",
-    "video": "chz_g0VfP4U",
-    "start": 1392,
-    "videoTitle": "PostgreSQL full course — agregatlar va GROUP BY bo‘limi",
+    "video": "pXGCaDAgyiI",
+    "start": 0,
+    "videoTitle": "PostgreSQL Aggregate Functions — Thapa Technical",
     "goal": "Agregat funksiyalar bir nechta qator qiymatini bitta hisoblangan natijaga aylantiradi. COUNT qatorlarni sanaydi, SUM yig‘adi, AVG o‘rtacha qiymatni, MIN eng kichik, MAX eng katta qiymatni beradi.",
     "steps": [
       "COUNT(*) barcha qatorlarni sanaydi.",
@@ -153,9 +153,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "8 daqiqa",
     "summary": "Xodimlar yoki loyihalarni bo‘lim, holat kabi belgilar bo‘yicha guruhlab hisoblash.",
-    "video": "chz_g0VfP4U",
-    "start": 1412,
-    "videoTitle": "PostgreSQL full course — GROUP BY",
+    "video": "FsTXg74UJzE",
+    "start": 0,
+    "videoTitle": "PostgreSQL GROUP BY & HAVING — Thapa Technical",
     "goal": "GROUP BY bir xil qiymatli qatorlarni guruhlarga ajratadi. Agregat funksiya har bir guruh uchun alohida hisoblanadi.",
     "steps": [
       "department_id bo‘yicha xodimlarni guruhlaymiz.",
@@ -182,9 +182,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "7 daqiqa",
     "summary": "GROUP BY dan keyin hosil bo‘lgan guruhlarni agregat shartlar bilan filtrlash.",
-    "video": "chz_g0VfP4U",
-    "start": 1378,
-    "videoTitle": "PostgreSQL full course — WHERE vs HAVING",
+    "video": "rCTLPam9TeU",
+    "start": 0,
+    "videoTitle": "SQL HAVING Clause — Mohamed Tahsin",
     "goal": "WHERE guruhlashdan oldin alohida qatorlarni filtrlab beradi. HAVING esa GROUP BY dan keyin guruhlarning agregat natijasini tekshiradi.",
     "steps": [
       "WHERE salary > 10000000 — avval xodim qatorlarini tanlaydi.",
@@ -211,9 +211,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "9 daqiqa",
     "summary": "Bog‘langan jadvallardagi ma’lumotlarni bitta natijada ko‘rsatish.",
-    "video": "chz_g0VfP4U",
-    "start": 1104,
-    "videoTitle": "PostgreSQL full course — JOINs",
+    "video": "bKllF9-RMCg",
+    "start": 0,
+    "videoTitle": "PostgreSQL INNER JOIN — Thapa Technical",
     "goal": "JOIN ikki jadvaldagi mos qatorlarni bog‘laydi. INNER JOIN faqat ON shartiga mos kelgan qatorlarni qaytaradi. Jadvalga alias berish so‘rovni ixcham qiladi.",
     "steps": [
       "employees.department_id — departments.id bilan bog‘lanadi.",
@@ -240,9 +240,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "8 daqiqa",
     "summary": "Chap jadvaldagi barcha qatorlarni, o‘ng jadvalda moslik bo‘lmasa ham saqlab qolish.",
-    "video": "chz_g0VfP4U",
-    "start": 1178,
-    "videoTitle": "PostgreSQL full course — LEFT JOIN",
+    "video": "aFCZ8QiLU0o",
+    "start": 0,
+    "videoTitle": "PostgreSQL JOINs: INNER and LEFT — Ajay Yadav",
     "goal": "LEFT JOIN chap jadvaldagi barcha qatorlarni qaytaradi. O‘ng jadvalda mos qator topilmasa, uning ustunlari NULL bo‘ladi. Shu sababli bo‘limi yo‘q xodim yoki xodimi yo‘q bo‘limlarni aniqlash mumkin.",
     "steps": [
       "FROM departments d — chap jadval.",
@@ -269,9 +269,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "9 daqiqa",
     "summary": "Jadvalga yangi yozuv qo‘shish va mavjud yozuvni xavfsiz yangilash.",
-    "video": "chz_g0VfP4U",
-    "start": 332,
-    "videoTitle": "PostgreSQL full course — INSERT va UPDATE",
+    "video": "Dndsh1dcx-U",
+    "start": 0,
+    "videoTitle": "SQL INSERT INTO — W3Schools",
     "goal": "INSERT INTO yangi qator qo‘shadi. UPDATE mavjud qatorlarni o‘zgartiradi. UPDATE da WHERE bo‘lmasa, jadvaldagi barcha qatorlar yangilanishi mumkin.",
     "steps": [
       "INSERT INTO (ustunlar) VALUES (qiymatlar) tartibida yoziladi.",
@@ -291,7 +291,9 @@ window.LESSON_CONTENT = [
       "INSERT da ustunlar va qiymatlar soni mos bo‘lishi kerak.",
       "UPDATE va DELETE dan oldin shu WHERE bilan SELECT sinab ko‘ring.",
       "Haqiqiy tizimda o‘zgarishdan oldin backup va tranzaksiya siyosatini biling."
-    ]
+    ],
+    "relatedVideo": "i5aGjhTluxo",
+    "relatedTitle": "SQL UPDATE — W3Schools"
   },
   {
     "id": "11",
@@ -299,9 +301,9 @@ window.LESSON_CONTENT = [
     "level": "O‘rta",
     "time": "8 daqiqa",
     "summary": "Keraksiz yozuvlarni o‘chirish, avval tekshirish va tranzaksiyaning maqsadini tushunish.",
-    "video": "chz_g0VfP4U",
-    "start": 454,
-    "videoTitle": "PostgreSQL full course — DELETE; tranzaksiyalar bo‘limi",
+    "video": "s7ehCYyEmVw",
+    "start": 0,
+    "videoTitle": "SQL DELETE — W3Schools",
     "goal": "DELETE jadvaldan qatorlarni o‘chiradi. WHERE bo‘lmasa barcha qatorlar o‘chadi. Tranzaksiya bir nechta amaliyotni bitta mantiqiy birlik sifatida bajarishga yordam beradi: COMMIT tasdiqlaydi, ROLLBACK bekor qiladi.",
     "steps": [
       "Avval SELECT ... WHERE bilan o‘chiriladigan qatorlarni ko‘ring.",
@@ -321,7 +323,10 @@ window.LESSON_CONTENT = [
       "DELETE dan oldin WHERE shartini SELECT bilan tekshiring.",
       "TRUNCATE va DELETE bir xil emas; TRUNCATE jadvaldagi barcha qatorlarni tez o‘chiradi.",
       "Tranzaksiya qo‘llab-quvvatlanishini haqiqiy PostgreSQL muhitida tekshiring."
-    ]
+    ],
+    "relatedVideo": "chz_g0VfP4U",
+    "relatedStart": 1628,
+    "relatedTitle": "PostgreSQL Transactions — RoadsideCoder"
   },
   {
     "id": "12",
@@ -329,9 +334,9 @@ window.LESSON_CONTENT = [
     "level": "Yuqori",
     "time": "10 daqiqa",
     "summary": "Ichki so‘rov va WITH orqali katta so‘rovlarni mantiqiy qismlarga ajratish.",
-    "video": "chz_g0VfP4U",
-    "start": 1463,
-    "videoTitle": "PostgreSQL full course — Subqueries va CTE",
+    "video": "Y6fs0npILus",
+    "start": 0,
+    "videoTitle": "PostgreSQL Subqueries and CTEs",
     "goal": "Subquery — boshqa SQL so‘rovi ichida joylashgan so‘rov. CTE (WITH) esa murakkab so‘rovni nomlangan vaqtinchalik natija sifatida ajratib, o‘qishni osonlashtiradi.",
     "steps": [
       "Ichki SELECT avval o‘rtacha maoshni hisoblaydi.",
